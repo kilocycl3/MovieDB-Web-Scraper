@@ -2,7 +2,7 @@ from page import *
 from scraper import *
 from export import exportcsv
 # import threading
-import time
+# import time
 
 def per_page_scrap():
     pass
@@ -63,7 +63,7 @@ def code():
             'Release Date': release_date,
             'Runtime': runtime,
             'Director': director,
-            # 'Url': url
+            'Url': url
         }
         
         final_data.append(movie_info)
