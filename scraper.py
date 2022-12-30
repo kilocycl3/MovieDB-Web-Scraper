@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import re
+from datetime import datetime
 
 def get_soup(url):
     
@@ -18,10 +19,12 @@ def movie_name(soup):
 
         movie_title = soup.find('h2')
 
-        movie_title = f'{movie_title.find("a").text} {movie_title.find("span").text}'
+        movie_title = movie_title.find("a").text  # Get only title
+
+        # movie_title = f'{movie_title.find("a").text} {movie_title.find("span").text}'  # Get Title with year
     
     except Exception as e:
-        print("Error retrieving Movie name")
+        print("Movie title not found")
 #         movie_title = "NA"
 
     return 'NA' if movie_title == '' else movie_title
@@ -36,7 +39,7 @@ def movie_ratings(soup):
         ratings = soup.find('div',class_='user_score_chart')['data-percent']
 
     except Exception as e:
-        print("Error retrieving Movie ratings")
+        print("Movie ratings not found")
 #         rating = "NA"
 
     return 'NA' if ratings == '' else ratings
@@ -49,15 +52,19 @@ def movie_genres(soup):
     try:
         
         genres = soup.find('span',class_='genres').text
-        # genres = genres.strip()
 
-        genres = genres.split(',')
-        genres = list(map(lambda a: a.strip()+',',genres))
-        genres[-1] = genres[-1][:-1]
-        genres = '\n'.join(genres)
+        genres = genres.split(',')  # Method 1
+        genres = list(map(lambda a: a.strip(),genres))  # Method 1
+        genres = ', '.join(genres)  # Method 1
+
+
+        # genres = genres.split(',')  # Method 2
+        # genres = list(map(lambda a: a.strip()+',',genres))  # Method 2
+        # genres[-1] = genres[-1][:-1]  # Method 2
+        # genres = '\n'.join(genres)  # Method 2
 
     except Exception as e:
-        print("Error retrieving Movie genre ")
+        print("Movie genre not found")
 #         genres = "NA"
         
     return 'NA' if genres == '' else genres
@@ -68,16 +75,20 @@ def movie_release_date(soup):
     release_date = ''    
     try:
         
-        release_date = soup.find('span',class_='release').text
+        temp_date = soup.find('span',class_='release').text
 
-        release_date = release_date.strip()
+        temp_date = temp_date.strip()
         
         pattern = '\d{2}/\d{2}/\d{4}'
 
-        release_date = re.findall(pattern,release_date)[0]
+        temp_date = re.findall(pattern,temp_date)[0]
+
+        date = datetime.strptime(temp_date,'%m/%d/%Y')
+
+        release_date = date.strftime('%m/%d/%Y')
         
     except Exception as e:
-        print("Error retrieving release date")
+        print("Relase date not found")
 #         release = "NA"
         
     return 'NA' if release_date == '' else release_date
@@ -91,7 +102,7 @@ def movie_runtime(soup):
         runtime = runtime.strip()
 
     except Exception as e:
-        print("Error retrieving runtime")
+        print("Runtime not found")
 #         runtime = "NA"
         
     return 'NA' if runtime == '' else runtime
@@ -111,12 +122,14 @@ def movie_director(soup):
                 director = name
                 break
         
-    except Exception as e:
-        print("Error retrieving director")
-        
-#     else:
-#         director = 'NA'
-        
-    return 'NA' if director == '' else director
+    except:
+        pass
+
+    if director == '':
+        print("Director name not found")
+    
+    return director
+
+    # return 'NA' if director == '' else director
 
 
