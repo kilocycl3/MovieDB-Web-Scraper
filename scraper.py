@@ -127,6 +127,7 @@ def movie_director(soup):
 
     if director == '':
         print("Director name not found")
+        director = 'NA'
     
     return director
 
