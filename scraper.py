@@ -88,7 +88,7 @@ def movie_release_date(soup):
         release_date = date.strftime('%m/%d/%Y')
         
     except Exception as e:
-        print("Relase date not found")
+        print("Release date not found")
 #         release = "NA"
         
     return 'NA' if release_date == '' else release_date
