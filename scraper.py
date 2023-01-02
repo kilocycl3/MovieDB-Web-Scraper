@@ -110,7 +110,7 @@ def movie_runtime(soup):
 
 def movie_director(soup):
     
-    director = ''
+    director = []
     
     try:
         movie_cast = soup.find_all('li',class_='profile')
@@ -119,15 +119,16 @@ def movie_director(soup):
             work = profile.find('p',class_='character').text
             name = profile.find('a').text
             if work.count('Director')>0:
-                director = name
-                break
+                director.append(name)
         
     except:
         pass
 
-    if director == '':
+    if len(director)==0:
         print("Director name not found")
-        director = 'NA'
+        director.append('NA')
+    
+    director = ', '.join(director)
     
     return director
 
